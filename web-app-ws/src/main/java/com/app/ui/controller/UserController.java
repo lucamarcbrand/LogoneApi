@@ -29,6 +29,7 @@ import com.ui.model.response.UserRest;
 
 @RestController
 @RequestMapping("users")
+// user related request will be handled by this controller
 public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	@Autowired
@@ -37,6 +38,7 @@ public class UserController {
 
 	@GetMapping(path = "/getUserDetail/{userPublicId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
+	// get user information bby passing userId
 	public UserRest getUserDetail(@PathVariable String userPublicId) {
 		logger.info("UserController.getUserDetail for User public id" + userPublicId);
 		UserRest userRest = new UserRest();
@@ -49,12 +51,14 @@ public class UserController {
 	@PostMapping(path = "/createUser", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
+	//this method is used to create user
 	public UserRest createUserDetail(@RequestBody UserDetailRequestModel userDetailRequestModel) throws Exception {
 		UserRest userRest = new UserRest();
 
 		UserDto userDto = modelmapper.map(userDetailRequestModel, UserDto.class);
 		UserDto createdUser = null;
 		try {
+			// actual DB call to creaate user
 			createdUser = userService.createUser(userDto);
 			modelmapper.map(createdUser, userRest);
 		} catch (UserServiceException userException) {
@@ -71,6 +75,7 @@ public class UserController {
 	@PutMapping	(path = "/updateUserDetail", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
+	// updates user profile information
 	public UserRest updateUserDetail(@RequestBody UserDetailRequestModel userDetailRequestModel) {
 		String userPublicId =userDetailRequestModel.getUserId();
 		boolean changePassword=userDetailRequestModel.isChangePassword();
@@ -88,13 +93,16 @@ public class UserController {
 		
 		modelmapper.map(address, addressDto);
 		modelmapper.map(invoiceAddress, invoiceDto);
+		
+		//set user address 
 		if(userDto.getAddress() !=null) {
 			addressDto.setId(userDto.getAddress().getId());
 		}
+		// set invoice address id
 		if(userDto.getInvoiceAddress() !=null) {
 			invoiceDto.setId(userDto.getInvoiceAddress().getId());
 		}
-		
+		// set details captured from API request to DTO
 		userDto.setAddress(addressDto);
 		userDto.setInvoiceAddress(invoiceDto);
 		userDto.setFirstName(userDetailRequestModel.getFirstName());
@@ -103,7 +111,7 @@ public class UserController {
 		if(changePassword) {
 			userDto.setPassword(userDetailRequestModel.getPassword());
 		}
-		
+		// send users updated information to service layer
 		UserDto updateUserResponse = userService.updateUser(userPublicId,userDto,changePassword);
 		modelmapper.map(updateUserResponse,userResponse);
 		userResponse.setPassword(null);
@@ -111,6 +119,7 @@ public class UserController {
 	}
 
 	@DeleteMapping(path = "/deleteUser/{userId}")
+	// this service is to delete user
 	public String deleteUserDetail(@PathVariable String userId) {
 		if (StringUtils.isEmpty(userId)) {
 			throw new UserServiceException(ErrorMessages.PROVIDE_USER_ID.getErrorMessage());

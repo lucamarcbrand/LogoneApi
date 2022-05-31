@@ -26,37 +26,37 @@ public class InvoiceController {
 
 	@PostMapping(path = "/getBillingDetail")
 	// this API is used for calculation of bill
-	public InvoiceRest getRegisteredVehicle(@RequestBody InvoiceModel invoiceModel) {
-
+	public InvoiceRest getBillingDetail(@RequestBody InvoiceModel invoiceModel) {
+		// calculate per box cost 
 		Double blackBoxCost = 0.00;
 		Integer blackPallet = 0;
 		if (invoiceModel.getBlack() != null && invoiceModel.getBlack().getBoxes() > 0) {
 			blackBoxCost = getBoxCost(invoiceModel.getBlack());
 			blackPallet = getPalletCount(invoiceModel.getBlack());
 		}
-
+		// calculate per box cost 
 		Double blueBoxCost = 0.00;
 		Integer bluePallet = 0;
 		if (invoiceModel.getBlue() != null && invoiceModel.getBlue().getBoxes() > 0) {
 			blueBoxCost = getBoxCost(invoiceModel.getBlue());
 			bluePallet = getPalletCount(invoiceModel.getBlue());
 		}
-
+		// calculate per box cost 
 		Double pinkBoxCost = 0.00;
 		Integer pinkPallet = 0;
 		if (invoiceModel.getPink() != null && invoiceModel.getPink().getBoxes() > 0) {
 			pinkBoxCost = getBoxCost(invoiceModel.getPink());
 			pinkPallet = getPalletCount(invoiceModel.getPink());
 		}
-
+		// calculate per box cost 
 		Double yellowBoxCost = 0.00;
 		Integer yellowPallet = 0;
 		if (invoiceModel.getYellow() != null && invoiceModel.getYellow().getBoxes() > 0) {
 			yellowBoxCost = getBoxCost(invoiceModel.getYellow());
 			yellowPallet = getPalletCount(invoiceModel.getYellow());
 		}
-		Integer totalPallets = blackPallet+bluePallet+pinkPallet+yellowPallet;
-		
+		Integer totalPallets = blackPallet + bluePallet + pinkPallet + yellowPallet;
+
 		Double totalBoxesCost = Double.sum(Double.sum(blueBoxCost, blackBoxCost),
 				Double.sum(pinkBoxCost, yellowBoxCost));
 
@@ -82,6 +82,8 @@ public class InvoiceController {
 			if (yellowPallet > 0) {
 				yellowBoxshippingCost = shippingCostUtility.getshippingCost(distanceInKm, yellowPallet);
 			}
+			
+			// find the total palletes shipping cost
 			if (totalPallets > 0) {
 				totalShippingCost = shippingCostUtility.getshippingCost(distanceInKm, totalPallets);
 			}
@@ -90,6 +92,7 @@ public class InvoiceController {
 			System.out.println("total distance in km " + distanceInKm);
 			System.out.println("total shipping Cost " + totalShippingCost);
 		}
+		// prepare the response object here
 		InvoiceRest response = new InvoiceRest();
 		response.setBlackCost(blackBoxCost);
 		response.setBlueCost(blueBoxCost);
@@ -106,7 +109,7 @@ public class InvoiceController {
 		response.setShippingCost(totalShippingCost);
 		return response;
 	}
-
+// convert the string  response received from google api to json object and retrive the Km information
 	private Long parseDistnceResponse(String distanceResponse) {
 		JSONObject jsonObject = new JSONObject(distanceResponse);
 		if (jsonObject != null && jsonObject.getJSONArray("rows").length() > 0) {
@@ -122,18 +125,20 @@ public class InvoiceController {
 		return 0l;
 	}
 
+	// calculates requred pallet
 	private int getPalletCount(MaskModel maskObj) {
 		Double boxes = maskObj.getBoxes();
 		return (int) Math.ceil(boxes / 800.00);
 	}
 
+	// calulate the cost per box
 	private Double getBoxCost(MaskModel maskObj) {
 		Double boxes = maskObj.getBoxes();
 
 		Double boxCostDouble = (Double) (perBoxCost * boxes);
 		return boxCostDouble;
 	}
-
+	// get the distance in Km  from meter
 	private Double getDistanceInKm(long meter) {
 		if (meter <= 999) {
 			return 1.0;

@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "address" )
+//ORM mapping class
 public class AddressEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6409759544615263918L;

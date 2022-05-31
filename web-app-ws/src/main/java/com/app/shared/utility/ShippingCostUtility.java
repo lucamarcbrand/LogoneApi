@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("singleton")
+// this class holds data which is required to find shipping cost
 public class ShippingCostUtility {
 	List<Double> Dis30 = Arrays.asList(58.65, 87.00, 114.50, 137.10, 160.80, 181.65, 201.45, 220.30, 238.35, 255.35,
 			271.45, 286.55);

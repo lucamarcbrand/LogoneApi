@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "invoice_detail" )
+//Invoice table ORM mapping class
 public class InvoiceAddressEntity implements Serializable{
 
 	private static final long serialVersionUID = -7311589210989747354L;
