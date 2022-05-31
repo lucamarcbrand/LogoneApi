@@ -55,7 +55,8 @@ public class InvoiceController {
 			yellowBoxCost = getBoxCost(invoiceModel.getYellow());
 			yellowPallet = getPalletCount(invoiceModel.getYellow());
 		}
-
+		Integer totalPallets = blackPallet+bluePallet+pinkPallet+yellowPallet;
+		
 		Double totalBoxesCost = Double.sum(Double.sum(blueBoxCost, blackBoxCost),
 				Double.sum(pinkBoxCost, yellowBoxCost));
 
@@ -81,8 +82,11 @@ public class InvoiceController {
 			if (yellowPallet > 0) {
 				yellowBoxshippingCost = shippingCostUtility.getshippingCost(distanceInKm, yellowPallet);
 			}
-			totalShippingCost = Double.sum(Double.sum(blueBoxshippingCost, blackBoxshippingCost),
-					Double.sum(pinkBoxshippingCost, yellowBoxshippingCost));
+			if (totalPallets > 0) {
+				totalShippingCost = shippingCostUtility.getshippingCost(distanceInKm, totalPallets);
+			}
+//			totalShippingCost = Double.sum(Double.sum(blueBoxshippingCost, blackBoxshippingCost),
+//					Double.sum(pinkBoxshippingCost, yellowBoxshippingCost));
 			System.out.println("total distance in km " + distanceInKm);
 			System.out.println("total shipping Cost " + totalShippingCost);
 		}
