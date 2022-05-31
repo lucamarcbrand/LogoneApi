@@ -27,6 +27,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+	//Processes an Authentication request.
 	private final AuthenticationManager authenticationManager;
 
 	public AuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -40,7 +41,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		try {
 			UserLoginRequestModel cred = new ObjectMapper().readValue(request.getInputStream(),
 					UserLoginRequestModel.class);
-
+//Attempts to authenticate the passed Authentication object, returning afully populated Authentication object (including granted authorities)if successful. 
 			return authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(cred.getEmail(), cred.getPassword(), new ArrayList<>()));
 		} catch (IOException e) {

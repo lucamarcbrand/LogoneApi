@@ -1,7 +1,7 @@
 package com.app.service.exception;
 
 import java.util.Date;
-
+//when exception occurs we send response in below class format
 public class ServicesException {
 	private Date timeStamp;
 	private String message;

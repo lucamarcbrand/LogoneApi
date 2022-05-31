@@ -11,8 +11,10 @@ import javax.persistence.Table;
 
 
 @Entity
+//Specifies that the class is an entity. This annotation is applied to the entity class
+
 @Table(name = "address" )
-//ORM mapping class
+//Specifies the primary table for the annotated entity. 
 public class AddressEntity implements Serializable {
 	
 	private static final long serialVersionUID = 6409759544615263918L;

@@ -36,24 +36,19 @@ public class UserServiceImpl implements UserService {
 	private ModelMapper mp = new ModelMapper();
 
 	@Override
+	// create new application user
 	public UserDto createUser(UserDto userDto) {
 		String userId = randomIdGenUtil.generateUserID(30);
+		// check if user already exists
 		if (userRepository.existsByEmail(userDto.getEmail())) {
 			throw new UserServiceException("USER WITH SAME EMIL ID IS ALEADY EXISTS ,PLEASE TRY WITH ANOTHER EMAIL");
 		}
 
 		userDto.setUserId(userId);
 
-//		if(userDto.getAddress() !=null) {
-//			userDto.getAddress().setAddrressId(randomIdGenUtil.generateAddressID(30));
-//		}
-//		else {
-//			throw new UserServiceException("Address Deails not provided");
-//		}
-
 		UserEntity userEntity = new UserEntity();
 		mp.map(userDto, userEntity);
-
+// convert text password to encripted format and then store in DATA BASE
 		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
 		UserEntity storedUserDetail = userRepository.save(userEntity);
@@ -65,6 +60,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	// find user from Data base using email id
 	public UserDetails loadUserByUsername(String email) {
 		UserEntity userEntity = userRepository.findByEmail(email);
 		if (userEntity == null)
@@ -74,6 +70,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUser(String userEmail) {
+		// find user from Data base using email id
 		UserEntity userEntity = userRepository.findByEmail(userEmail);
 		if (userEntity == null)
 			throw new UsernameNotFoundException(userEmail);
@@ -84,6 +81,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUserDetailsById(String userPublicID) {
+		// find user from Data base using user id
 		UserEntity userEntity = userRepository.findByUserId(userPublicID);
 		if (userEntity == null)
 			throw new UsernameNotFoundException(userPublicID);
@@ -93,15 +91,21 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	// delete user from Application
+	// it requires user id 
 	public boolean deleteUser(String userPublicID) {
+		// find user from Data base
 		UserEntity userEntity = userRepository.findByUserId(userPublicID);
 		if (userEntity == null)
 			throw new UsernameNotFoundException(userPublicID);
+		
+		// delete user from Database
 		userRepository.delete(userEntity);
 		return true;
 	}
 
 	@Override
+	//Update the user profile information
 	public UserDto updateUser(String userPublicID, UserDto userDto, boolean changePassword) {
 
 		UserEntity userEntity = new UserEntity();
@@ -114,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
 		mp.map(address, addresseEntity);
 		mp.map(invoiceAddress, invoiceEntity);
-
+// change user password if "changePassword" flag is true
 		if (changePassword) {
 			userDto.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 		}
@@ -122,6 +126,7 @@ public class UserServiceImpl implements UserService {
 		mp.map(userDto, userEntity);
 		userEntity.setAddress(addresseEntity);
 		userEntity.setInvoiceAddress(invoiceEntity);
+		// save the updated user details in Database
 		userRepository.save(userEntity);
 
 		mp.map(userEntity, userDto);

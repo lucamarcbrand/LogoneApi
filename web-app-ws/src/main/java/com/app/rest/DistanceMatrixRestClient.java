@@ -11,8 +11,9 @@ public class DistanceMatrixRestClient {
 // this method is used to find distance between origin and destination the acctual response structure would look similar to json present at bottom
 	public String getDistance(String origins, String destinations) {
 		RestTemplate restTemplate = new RestTemplate();
+		
 		String url = String.format(distanceMatrixApi, origins, destinations);
-
+		// api call to google
 		String responseEntity = restTemplate.getForObject(url, String.class);
 		System.out.println(responseEntity);
 		return responseEntity;
