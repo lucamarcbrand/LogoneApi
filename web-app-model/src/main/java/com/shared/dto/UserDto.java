@@ -13,15 +13,9 @@ public class UserDto implements Serializable {
 	private long id;
 	private String userId;
 	private String encryptedPassword;
-	private String emailVerificationToken;
-	private Boolean emailVerificationStatus=false;
 	private AddressDto address;
 	private InvoiceAddressDto invoiceAddress;
 
-	
-	private byte profilePic[];
-    private String profilePicFileName;
-	
 	private String mobileNumber;
 	
 	
@@ -50,12 +44,7 @@ public class UserDto implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public Boolean getEmailVerificationStatus() {
-		return emailVerificationStatus;
-	}
-	public void setEmailVerificationStatus(Boolean emailVerificationStatus) {
-		this.emailVerificationStatus = emailVerificationStatus;
-	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -80,12 +69,7 @@ public class UserDto implements Serializable {
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
 	}
-	public String getEmailVerificationToken() {
-		return emailVerificationToken;
-	}
-	public void setEmailVerificationToken(String emailVerificationToken) {
-		this.emailVerificationToken = emailVerificationToken;
-	}
+
 	public AddressDto getAddress() {
 		return address;
 	}
@@ -93,18 +77,7 @@ public class UserDto implements Serializable {
 		this.address = address;
 	}
 
-	public byte[] getProfilePic() {
-		return profilePic;
-	}
-	public void setProfilePic(byte[] profilePic) {
-		this.profilePic = profilePic;
-	}
-	public String getProfilePicFileName() {
-		return profilePicFileName;
-	}
-	public void setProfilePicFileName(String profilePicFileName) {
-		this.profilePicFileName = profilePicFileName;
-	}
+	
 	public InvoiceAddressDto getInvoiceAddress() {
 		return invoiceAddress;
 	}
